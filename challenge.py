@@ -5,9 +5,18 @@ def conversao (a):
     valor_convertido = a * 0.009
     return valor_convertido
 
-def simulacao_conversao (b):
-    valor_simulado = b * 0.009
-    return valor_simulado
+def validacao (pontos, pontos_atuais, limite):
+    if pontos > pontos_atuais:
+        print("Não foi possível prosseguir pois você inseriu um valor maior do que possui.")
+        return False
+    elif pontos > limite:
+        print("Não foi possível prosseguir pois você inseriu um valor maior do que o seu limite.")
+        return False
+    elif pontos <= 0:
+        print("Não é possível converter 0 ou menos pontos")
+        return False
+    else:
+        return True
 
 login = False
 username_cad = "Usuario_teste"
@@ -24,15 +33,13 @@ while login == False:
     else:
         print("Usuário ou senha incorretos.")
 
-current_pontos = 6000
-limite_pontos_resgate = 5000
+transferir_bu = 0
+creditos_bu = 0
+current_pontos = 9000
+limite_pontos_resgate = 8000
 opcao = -1
 resgate = 0
 saldo_atual = 0
-
-# ==================================
-# PARA SER FEITO: codar as opções 10, 11 e 12. Além disso, talvez criar um jeito de escolher em qual conta depositar o resgate
-# ==================================
 
 while opcao != 0:
     print("\n===== MENU =====")
@@ -47,7 +54,8 @@ while opcao != 0:
     print("9 - Conferir saldo.")
     print("10 - Converter pontos em créditos do bilhete único.")
     print("11 - Transferir os créditos para o bilhete único.")
-    print("12 - Conferir limite de pontos resgatados.")
+    print("12 - Conferir a quantidade de créditos do bilhete único.")
+    print("13 - Conferir limite de pontos resgatados.")
     print("0 - Sair.")
 
     opcao = int(input("Escolha uma opção: "))
@@ -57,7 +65,7 @@ while opcao != 0:
         case 1:
             user_conta_banc = input("Digite o nome de usuário de sua conta bancária: ")
             senha_conta_banc = input("Digite a senha da conta: ")
-            conta_banc ={"Usuário": user_conta_banc, "Senha": senha_conta_banc}
+            conta_banc ={"user_conta_banc": user_conta_banc, "senha_conta_banc": senha_conta_banc}
             contasbancarias.append(conta_banc)
             print("Conta cadastrada com sucesso!")
         
@@ -75,10 +83,16 @@ while opcao != 0:
 
             for a in contasbancarias:
                if a["user_conta_banc"] == user_conta_banc and a["senha_conta_banc"] == senha_conta_banc:
-                   contasbancarias.remove(a)
-                   encontrado = True
-                   print("Conta removida.")
-                   break
+                   confirm = int(input("Você realmente deseja remover a conta? Digite '1' para sim e '2' para não."))
+                   if confirm == 1:
+                    contasbancarias.remove(a)
+                    encontrado = True
+                    print("Conta removida.")
+                    break
+                   else:
+                       print("Conta não removida.")
+                       encontrado = True
+                       break
             
             if not encontrado:
                print("Conta não encontrada.")
@@ -95,31 +109,56 @@ while opcao != 0:
         
         case 6:
             pontos_simulacao = int(input("Insira a quantidade de pontos para fazer a simulação de uma conversão: "))
-            simu_pont = simulacao_conversao(pontos_simulacao)
+            simu_pont = conversao(pontos_simulacao)
             print(f"{pontos_simulacao} pontos são iguais a R$ {simu_pont:.2f}.")
 
         case 7:
             pontos_convert = int(input("Insira a quantidade de pontos que você deseja converter em dinheiro: "))
 
-            if pontos_convert > current_pontos or pontos_convert > limite_pontos_resgate:
-                print("Não foi possível prosseguir pois você inseriu um valor maior do que possui.")
-            elif pontos_convert == 0:
-                print("Não é possível converter 0 pontos")
-            else:
+            if validacao(pontos_convert, current_pontos, limite_pontos_resgate):            
                 current_pontos -= pontos_convert
                 limite_pontos_resgate -= pontos_convert
                 conv_pontos_din = conversao(pontos_convert)
                 resgate += conv_pontos_din
                 print(f"Você converteu {pontos_convert} em R$ {conv_pontos_din:.2f} com sucesso!")
+            
 
         case 8: 
-            saldo_atual += resgate
-            print(f"Parabéns, você resgatou R$ {resgate}.")
+            if resgate == 0:
+                print("Você não converteu pontos em dinheiro, por isso não foi possível realizar o resgate.")
+            else:
+                saldo_atual += resgate
+                print(f"Parabéns, você resgatou R$ {resgate}.")
+                resgate = 0
 
         case 9:
             print(f"Atualmente seu saldo é de R$ {saldo_atual}.")
+        
+        case 10:
+            pontos_convert_bu = int(input("Insira a quantidade de pontos que você deseja converter em créditos para o bilhete único: "))
 
+            if validacao(pontos_convert_bu, current_pontos, limite_pontos_resgate):
+                current_pontos -= pontos_convert_bu
+                limite_pontos_resgate -= pontos_convert_bu
+                conv_pontos_bu = conversao(pontos_convert_bu)
+                transferir_bu += conv_pontos_bu
+                print(f"Você converteu {pontos_convert_bu} em R$ {conv_pontos_bu:.2f} para o bilhete único com sucesso!")
+
+        case 11: 
+            if transferir_bu == 0:
+                print("Você não converteu pontos em créditos, por isso não foi possível realizar a transferência.")
+            else:
+                creditos_bu += transferir_bu
+                print(f"Parabéns, você resgatou R$ {transferir_bu:.2f}.")
+                transferir_bu = 0
+
+        case 12:
+            print(f"Atualmente você possui R$ {creditos_bu:.2f} no bilhete único.")
+
+        case 13:
+            print(f"Seu limite atual é de {limite_pontos_resgate} pontos.")
 
         case 0:
             print("Encerrando sistema...")
             break
+            
