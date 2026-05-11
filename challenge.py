@@ -64,7 +64,11 @@ while opcao != 0:
     print("13 - Conferir limite de pontos transformados em passsagens.") 
     print("0 - Sair.")
 
-    opcao = int(input("Escolha uma opção: "))
+    try:
+        opcao = int(input("Escolha uma opção: "))
+    except ValueError:
+        print("Opção inválida. Digite apenas números.")
+        continue
 
     match opcao:
 
