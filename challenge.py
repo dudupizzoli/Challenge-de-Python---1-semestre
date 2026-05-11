@@ -48,7 +48,7 @@ resgate_din = 0
 saldo_bu_atual = 0
 
 while opcao != 0:
-    print("\n===== MENU =====")
+    print("\n===== Menu SoulUp Society =====")
     print("1 - Conferir missões.")
     print("2 - Ver quantidade de pontos.")
     print("3 - Simular conversão de pontos em dinheiro.") 
