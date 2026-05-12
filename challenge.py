@@ -158,3 +158,6 @@ while opcao != 0:
             print("Encerrando sistema...")
             break
 
+        case _:
+            print("Opção inválida. Digite uma opção válida do menu.")
+            
